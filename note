@@ -1,0 +1,239 @@
+
+一、数据类型和运算基础
+	1、js弹出一个输入框
+		prompt()
+
+	2、数据类型
+		number
+		boolean
+		String  
+		Undefined
+		Null
+	3、isNaN() 
+		NaN  =  Not a  Number   不是一个数字
+		判断是否非数字，非数字返回ture，是数组返回false
+
+	4、javascript中的变量都是弱类型，所有的变量都声明为var，在类型转换过程中就没有java那么方便，
+	它是通过 parseInt(变量)、parseFloat(变量)等方法来进行类型转换的。注意：没有parseDouble(变量)
+	这种类型转换，因为在javascript中不分单精度float和双精度double，
+	凡事有小数的变量都认为是float，因此要取小数后的n位，要用方法toFixed(n)来得到。
+
+	5、字符串
+		1、字符串长度
+			str.length  后面没括号，盲猜是字符串对象的一个属性
+		2、字符串拼接
+			字符串+数字类型  最后的到一个字符串
+			
+		3、字符串中的转义
+			可以双引号或单引号，有转义字符如换行 \n
+		
+	6、typeof str  返回变量的数据类型
+
+	7、比较符
+		10==10  true
+		10=='10' true
+		
+		== 自动转类型
+		
+		如果要判断全等，用===
+		10 === '10'   false
+	
+二、函数
+	1、函数的声明
+		① function fun(){}  //函数声明，会被提前创建，在哪里写都可以
+		② var fun=function(){} //函数表达式，不会提前，先写才能调用
+		③ (function(a,b){aletr(a+b)}) (1，2);//立即执行函数，创建就被调用，只调用一次
+		
+	2、函数参数问题
+		调用的时候传的参数多了，多的那些不被用
+		
+	3、函数中的arguments （伪数组）
+		在函数 function fun（）中，如果没有指定多少个参数，那可以用arguments来获取
+		arguments[0]
+		arguments[1]
+		arguments[2]
+
+	4、链式作用域（es5中，在函数使用外部的变量，如果多个变量名相同，使用上一层。)
+		总结：es5不严谨，作用域如下：
+		1、在最外面定义变量，函数内可以访问，并且可以修改（但是如果以形式参数传进来，不能改）
+		2、在if或者for这种语句内定义变量，语句外面同样可以访问。
+		3、如果内外定义的有相同名字的变量，他优先识别本层内的，再往外一层识别。（就近原则）
+		4、如果使用变量时加window.a就是找全局变量的a，不加就是就近
+		5、var关键字语句会在所有的代码之前先定义。如果你在var a=5之前使用a，那么这个a被定义了但是还没赋值5。
+		   不用关键字则为全局变量
+		6、定义形参相当于在函数内声明了一个变量。
+
+	
+	5、this
+		调用函数的时候：
+			fun（）；这样调用this是windo
+			fun.call(obj) :this就是obj的类型Object
+			fun.apply :this就是obj的类型Object
+三、对象
+		
+	1、声明：
+		方式一：var obj1 =new Object();
+		方式二：var obj={id:1,name:"ss"};   可以直接在{}设置属性和值，多个用逗号隔开
+		
+		
+		添加属性：
+		obj1.name = "zhangsan ";
+		读取属性：
+		obj1.name
+		修改属性：
+		obj1.name = "lisi ";
+		
+	2、属性名
+		对象的属性名没有命名要求，但是如果有特殊属性名，需要用[]这种方式
+		存
+		obj["123"]=1;
+		取
+		obj["123"]
+		用in 检查属性名是否在对象内  如  "name" in obj1 返回true
+		
+	3、属性值：
+		可以是任何类型，基本类型和对象
+	
+	4、内存   
+		上面的  obj1是引用数据类型，保存的是内存地址
+		var obj1 = new Object；
+		var obj2 = new Object；
+		
+		
+		
+		
+		而在基本数据类型中，变量保存的是值。
+		var a= 5; 在常量池有一个5，并且a指向它
+		var b=a;  b也指向了那个5；
+		a=2;      a指向换到了常量池的2；
+		最后a=2 b=5    但是b还是指的5；
+
+	5、构造方法
+		构造函数的执行流程
+		1、创建一个对象
+		2、将新建对象设置为函数中的this  （理解为java中的this）
+		3、逐行执行函数中的代码
+		4、将新建的对象作为返回值返回
+		
+		js写法
+		function Student(id, name){
+			this.id =id
+			this.name =name
+		}
+		对比java的有参构造
+		void Student (int id ,String name){
+			this.id =id;
+			this.name= name;
+		}
+		tip：跟java差不多，但是java要定义好类，把成员变量先声明好再构造。
+				而JS中的类，就是指构造函数，成员变量在构造函数中添加。
+				
+----引出原型概念：
+		function Student(id, name){
+			this.id =id
+			method:function(){
+				aletr(this.id);
+			}
+		}
+	上面这种，构造函数里面定义的有成员方法，并且方法体写在类里面，那么每创建一个对象
+		就会有一个方法区声明，浪费资源
+		下面是改进：
+		function Student(id, name){
+			this.id =id
+			this.method=fun；
+		}
+		function fun(){
+				aletr(this.id);
+			}
+		将函数写在全局变量中，把函数的名字传给类中的成员变量，这样不管new多少个类，都只有
+		一个fun，调用的时候都是类调用。但是这样污染了全局，全局变量会很多相同的命名覆盖掉
+	引出原型对象：在同一个类，有一块共同的区域，这片区域也是对象，叫做原型对象。
+	可以在这里面定义一些变量和方法，可以让同一个类的所有对象访问（多个对象访问的同一个对象，会改掉里面的值）
+		只在构造函数中有，用 .__proto__ 来访问
+		
+		//创建一个对象
+		function Student(id){
+		this.id=id;
+	}
+		//通过.prototype可以访问原型对象
+		Student.prototype.a=1
+		
+		//然后创建两个不同的对象都可以访问到a
+		
+		
+		补充，对象里面的成员变量和方法，首先会在对象里找，再去原型里找，
+		用 a  in  Student 是找对象和原型
+		用 hasOwnProperty("a")是找本身，原型里面的东西不会找到
+		
+		
+		
+四、数组（也是个对象）
+	1、定义在JS中，把数组跟对象拿来一起看，对象存值是键值对key：value，数组一样，但是数组的key是下标index
+		方一：var arr = new Array();
+		方式二： var arr=[]；
+		
+	2、获取长度（.length）
+		①arr.length   返回长度
+		②arr.length=10 设置数组的长度、
+	3、数组后添加元素
+		arr[arr.length]=value;
+		arr.push(5)
+		都可以
+	 总结js的数组：
+		js的数组跟C和JAVA不一样的地方
+			1、除了有index索引，你还可以加自己的key，会自动写在最后（c只有定好的索引）
+			2、数组里面可以存不同类型的值，c和java只能存同数据的值（C只能存相同数据类型）
+			3、不需要申明长度，他可以动态分配（C必须申明长度）
+			4、js的数组可以像栈用push(),pop()方法，也可以像队列
+			5、js数组可以for-each遍历，可以排序也可以倒置。
+			6、js还提供了好多方法。
+		JS数组其实继承的JSObject对象，底层是个map，key为0，1，2，value是数组元素，其中index也是字符串。
+		当你存了不同元素时，JS底层是用的散列表实现的（快数组->慢数组）
+		c和java中，数组都是开辟一块固定空间。(快数组)
+		
+
+五、JS高阶函数
+
+	<script type="text/javascript">
+
+	const num=[1,2,6,10,5,2,500,520]	
+	
+	//1、filter ,遍历数组，将符合条件（为true）写入新数组并返回
+	let num2 = num.filter(function(value){
+		return value>10;
+	})
+	
+	//2、map ，遍历数组，并且可对每一个元素操作
+	let num3 = num.map(function(n){
+		return n*10
+	})
+	
+	//3、reduce,便利数组，
+	//参数一，函数。函数中的两个参数分别是，上次执行的结果，这次拿到的数组数据
+	//参数二，初始值，因为第一次执行的时候，需要给一个上次执行的结果，不写的话默认为0
+	//往往用用来累加数组全部元素
+	let num4 =num.reduce(function(lastValue,value){
+		return lastValue+value
+	},0)
+	
+	//4、箭头函数,就是一些函数的简化，n=>n+1 相当于n是形式参数，n+1是返回值
+	let num5 = num.map(n=>n+1)
+	
+	//汇总，求这个数组中，所有小于10的数乘上10，在求和
+	let sum=num.filter(n=>n<10).map(n=>n*10).reduce((r,n)=>r+n,0)
+	
+	console.log(num2)
+	console.log(num3)
+	console.log(num4)
+	console.log(num5)
+	console.log(sum)	
+	</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
